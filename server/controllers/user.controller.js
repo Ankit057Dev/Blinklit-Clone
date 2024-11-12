@@ -37,7 +37,7 @@ export async function registerUserController(request,response){
         const save = await newUser.save()//to save the data provided by user in the database
 
 
-        const VerifyEmailUrl = ""
+        const VerifyEmailUrl = `${process.env.FRONTEND_URL}/verify-email?code=${save?._id}` // get triggered when user click verify button in frontend
         const verifyEmail = await sendEmail({
             sendTo : email,
             subject : "Verify email from blinkitClone",
@@ -45,6 +45,15 @@ export async function registerUserController(request,response){
                 name,
                 url : VerifyEmailUrl
             })
+
+        })
+
+
+        return response.json({
+            message : "User Register successfully",
+            error : false,
+            success : true,
+            data : save
 
         })
 

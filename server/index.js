@@ -6,6 +6,7 @@ import cookieParser from 'cookie-parser'
 import morgan from 'morgan' // it is logger when an api is called displayed inside the termianl
 import helmet from 'helmet'
 import connectDB from './config/connectDB.js'
+import userRouter from './route/user.route.js'
 const app = express()
 app.use(cors({
     credentials : true,
@@ -34,6 +35,9 @@ app.get("/",(request,response)=>{
         message : "Server is running" + PORT
      })
 })
+
+
+app.use('api/user',userRouter)
 
 
 connectDB().then(()=>{

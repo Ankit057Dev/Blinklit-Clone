@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import dotenv from 'dotenv'
 dotenv.config()
 
-if(process.env.MONGODB_URI){
+if(!process.env.MONGODB_URI){
     throw new Error(
         "please provide MONGODB_URI inn the new .env file "
     )
