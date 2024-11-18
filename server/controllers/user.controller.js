@@ -67,3 +67,50 @@ export async function registerUserController(request,response){
         })
     }
 }
+
+
+export async function verifyEmailController(request,response) {
+
+    try {
+        const {code} = request.body // verification code when user click on verify email link
+
+        const user = await UserModel.findOne({_id: code})  // to check user in database 
+
+        if(!user){
+            return response.status(400).json(
+            {
+                message : "invalid code",
+                error : true,
+                success : false
+            }
+            )
+
+        } // if code entered is invalid
+
+
+        // now for updating field with valid user 
+
+        const updateUsers = await UserModel.updateOne({_id : code},{
+            verify_email : true
+        } )
+
+
+        return response.json({
+            messsage: "verification done",
+            success : true,
+            error : false
+
+        })
+
+
+
+
+    } catch (error) {
+        return response.status(500).json({
+            message : error.message || error,
+            error : true,
+            success :  true
+        })
+    }
+    
+}
