@@ -80,7 +80,7 @@ export async function verifyEmailController(request,response) {
             return response.status(400).json(
             {
                 message : "invalid code",
-                error : true,
+                error : true, 
                 success : false
             }
             )
@@ -114,3 +114,35 @@ export async function verifyEmailController(request,response) {
     }
     
 }
+
+//login controller
+
+export async function loginController(request,response){
+    try {
+        const {email ,password } = request.body// to get user login details
+
+        // to check email id exist in db or not 
+        const user = await UserModel.findOne({email})
+
+
+        if(!user){
+            return response.status(400).json({
+                message : "User does not exist please Register First",
+                error : true,
+                success : false
+        })}
+
+        // to check user email or user is active/inactive/suspended
+        if(user.status !== "Active"){
+            return response.status(400).json({
+                message : 
+            })
+        }
+    }catch (error) {
+        return response.status(500).json({
+            message : error.message || error,
+            error : true,
+            success : false
+        })
+        
+    }}
