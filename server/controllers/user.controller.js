@@ -94,17 +94,12 @@ export async function verifyEmailController(request,response) {
             verify_email : true
         } )
 
-
         return response.json({
             messsage: "verification done",
             success : true,
             error : false
 
         })
-
-
-
-
     } catch (error) {
         return response.status(500).json({
             message : error.message || error,
@@ -118,8 +113,17 @@ export async function verifyEmailController(request,response) {
 //login controller
 
 export async function loginController(request,response){
-    try {
+    try { 
         const {email ,password } = request.body// to get user login details
+
+        //adding validation 
+        if(!email || !password){
+            return response.status(400).json({
+                message : "provide email,password",
+                error : true,
+                success : false
+            })
+        }
 
         // to check email id exist in db or not 
         const user = await UserModel.findOne({email})
@@ -135,9 +139,43 @@ export async function loginController(request,response){
         // to check user email or user is active/inactive/suspended
         if(user.status !== "Active"){
             return response.status(400).json({
-                message : 
+                message : "Contact to admin",
+                error : true,
+                success : false
             })
         }
+
+        // decrypt password that was stored above in the form of encryption to verify stored login password
+        const checkPassword = await bcryptjs.compare(password,user.password)
+        if (!checkPassword){
+            return response.status(400).json({
+                message : "Check Entered Passssword ",
+                error : true,
+                success : false
+            })
+        }
+
+        const accesstoken = await generateAccessToken(user._id)
+        const refreshToken = await generatedRefreshToken(user._id)
+
+        const cookiesOption ={
+            httpOnly : true,
+            secure : true,
+            sameSite : "None"// to set tokens inside cookies independent of site
+        }
+        response.cookie('accessToken',accesstoken,cookiesOption)// to send these tokens to user cookies
+        response.cookie('refreshToken',refreshToken,cookiesOption)
+       
+
+        return response.json({
+            message : "Login Successfully",
+            error : false,
+            success : true,
+            data : {
+                accesstoken,
+                refreshToken// in case of mobile for default cookie save
+            }
+        })
     }catch (error) {
         return response.status(500).json({
             message : error.message || error,
@@ -145,4 +183,4 @@ export async function loginController(request,response){
             success : false
         })
         
-    }}
+    }} 
