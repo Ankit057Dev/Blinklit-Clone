@@ -1,6 +1,9 @@
 import UserModel from '../models/user.model.js'
 import bcryptjs from 'bcryptjs'
 import verifyEmailTemplate from '../utils/verifyEmailTemplate.js'
+import generatedAccessToken from '../utils/generatedAccessToken.js'
+import generatedRefreshToken from '../utils/generatedRefreshToken.js'
+import sendEmail from '../config/sendEmail.js'
 
 export async function registerUserController(request,response){
     try {
@@ -14,7 +17,7 @@ export async function registerUserController(request,response){
             })
         }
 
-        const user = await UserModel.findOne({ email})// for user already exist in database
+        const user = await UserModel.find({email})// for user already exist in database
         if (user){
             return response.json({
                 message: 'user already exists',
@@ -155,7 +158,7 @@ export async function loginController(request,response){
             })
         }
 
-        const accesstoken = await generateAccessToken(user._id)
+        const accesstoken = await generatedAccessToken(user._id)
         const refreshToken = await generatedRefreshToken(user._id)
 
         const cookiesOption ={
@@ -184,3 +187,34 @@ export async function loginController(request,response){
         })
         
     }} 
+
+    //logout controller
+
+    export async function logoutContoller(request,response){
+        try 
+        {
+
+            const cookiesOption = {
+                httpOnly : true,
+                secure : true,
+                sameSite:"None"
+            }
+
+
+            response.clearCookie("accessToken",cookiesOption)
+            response.clearCookie("refreshToken",cookiesOption)
+
+
+            return response.json({
+                message : "Logout Successfully",
+                error :false,
+                success : true
+            })
+        } catch (error) {
+            return response.status.json({
+                message : error.message || error,
+                error : true,
+                success : false 
+            })
+        }
+    }
