@@ -223,3 +223,20 @@ export async function loginController(request,response){
             })
         }
     }
+
+    //reset password
+
+    export async function resetPassword (request,response){
+
+        try {
+
+            
+        } catch (error) {
+            return respone.status.json({
+                message :error.message || error,
+                error : true,
+                success: false
+            })
+        }
+
+    }
