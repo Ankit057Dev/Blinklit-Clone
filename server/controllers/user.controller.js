@@ -4,6 +4,7 @@ import verifyEmailTemplate from '../utils/verifyEmailTemplate.js'
 import generatedAccessToken from '../utils/generatedAccessToken.js'
 import generatedRefreshToken from '../utils/generatedRefreshToken.js'
 import sendEmail from '../config/sendEmail.js'
+import jwt from 'jsonwebtoken'
 
 export async function registerUserController(request,response){
     try {
@@ -17,7 +18,7 @@ export async function registerUserController(request,response){
             })
         }
 
-        const user = await UserModel.find({email})// for user already exist in database
+        const user = await UserModel.findOne({email})// for user already exist in database
         if (user){
             return response.json({
                 message: 'user already exists',
@@ -194,15 +195,19 @@ export async function loginController(request,response){
         try 
         {
 
+            // adding middleware to remove refresh token from user database
+
+            
+
             const cookiesOption = {
                 httpOnly : true,
                 secure : true,
                 sameSite:"None"
-            }
+            }// added cookie option to remove saved cookies
 
 
             response.clearCookie("accessToken",cookiesOption)
-            response.clearCookie("refreshToken",cookiesOption)
+            response.clearCookie("refreshToken",cookiesOption)// to remove saved cookies
 
 
             return response.json({
