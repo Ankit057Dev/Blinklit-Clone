@@ -16,6 +16,7 @@ app.use(cors({
 //for coverrsion of response to json
 
 app.use(express.json())
+app.use(express.urlencoded({extended:true}))
 app.use(cookieParser())
 app.use(morgan())
 app.use(helmet({
@@ -37,11 +38,10 @@ app.get("/",(request,response)=>{
 })
 
 
-app.use('api/user',userRouter)
+app.use('/api/user',userRouter)
 
 
 connectDB().then(()=>{
     app.listen(PORT,()=>{
         console.log("server is running",PORT)
-    })
-})
+})})
