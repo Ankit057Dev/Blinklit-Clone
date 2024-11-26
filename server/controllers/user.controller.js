@@ -5,6 +5,7 @@ import generatedAccessToken from '../utils/generatedAccessToken.js'
 import generatedRefreshToken from '../utils/generatedRefreshToken.js'
 import sendEmail from '../config/sendEmail.js'
 import jwt from 'jsonwebtoken'
+import uploadImageCloudinary from '../utils/uploadImageCloudinary.js'
 
 export async function registerUserController(request,response){
     try {
@@ -196,7 +197,7 @@ export async function loginController(request,response){
         {
 
             // adding middleware to remove refresh token from user database
-
+            const userid = request.userId//middleware
             
 
             const cookiesOption = {
@@ -208,6 +209,10 @@ export async function loginController(request,response){
 
             response.clearCookie("accessToken",cookiesOption)
             response.clearCookie("refreshToken",cookiesOption)// to remove saved cookies
+
+            const removeRefreshToken = await UserModel.findByIdAndUpdate(userid,{
+                refresh_token : ""
+            })// remove refresh token from db
 
 
             return response.json({
@@ -224,15 +229,33 @@ export async function loginController(request,response){
         }
     }
 
-    //reset password
+    //upload user avatar
 
-    export async function resetPassword (request,response){
+    export async function uploadAvatar (request,response){
 
         try {
+            //to get image file we use multer packages visit multer we for config
+            const userId = request.userId // auth middleware
+            const image = request.file // multer middleware
 
-            
+            const upload = await uploadImageCloudinary(image)// to upload image at cloudinary
+
+            const updateUser = await UserModel.findByIdAndUpdate(userId,{
+                avatar : upload.url
+            })
+
+
+
+            return response.json({
+                message : "upload profile",
+                data : {
+                    _id : userId,
+                    avatar : upload.url
+                }
+            })
+
         } catch (error) {
-            return respone.status.json({
+            return respone.status(500).json({
                 message :error.message || error,
                 error : true,
                 success: false
