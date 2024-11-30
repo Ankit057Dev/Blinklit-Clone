@@ -263,3 +263,43 @@ export async function loginController(request,response){
         }
 
     }
+
+    //update user details
+
+    export async function updateUserDetails(request,response) {
+        try {
+            const userId = request.userId //auth middleware to only allow logined user
+            const {name,email,mobile,password} =request.body
+
+            let hashPassword = ""
+
+            if(password){
+                const salt = await bcryptjs.genSalt(10)
+                hashPassword = await bcryptjs.hash(password,salt)
+            }
+
+            const updateUser = await UserModel.findByIdAndUpdate(userId,{
+                ...(name && {name : name}),
+                ...(email && {email : email}),
+                ...(mobile && {mobile: mobile}),
+                ...(password && {password : hashPassword})
+            })
+
+            
+            return response.json({
+                message : "update user details successful",
+                error : false,
+                success : true,
+                data : updateUser
+            })
+
+        } catch (error) {
+
+            return response.status(500).json({
+                message : error.message || error,
+                error : true,
+                success : false
+            })
+            
+        }
+    }
