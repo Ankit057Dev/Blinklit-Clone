@@ -6,6 +6,11 @@ return `
 
     <p> this otp is valud for 1 hpur only. Enter this otp in the blinkit website to proceed with resetting your password.</p></br>
 
+    <div>
+    <p>Requested Otp is :  ${otp}</p>
+    </div></br>
+
+
     <p>Best regards, BlinkitClone Team</p>
 
 
@@ -14,3 +19,6 @@ return `
 
 `
 }
+
+
+export default forgotPasswordTemplate

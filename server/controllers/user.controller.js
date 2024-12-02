@@ -7,6 +7,7 @@ import sendEmail from '../config/sendEmail.js'
 import jwt from 'jsonwebtoken'
 import uploadImageCloudinary from '../utils/uploadImageCloudinary.js'
 import generateOtp from '../utils/generateOtp.js'
+import forgotPasswordTemplate from '../utils/forgotPasswordTemplate.js'
 
 export async function registerUserController(request,response){
     try {
@@ -305,7 +306,7 @@ export async function loginController(request,response){
         }
     }
 
-//forgot password
+//forgot password without login
 
 export async function forgotPasswordController(request,response){
     try {
@@ -334,6 +335,10 @@ export async function forgotPasswordController(request,response){
         await sendEmail({
             sendTo : email,
             subject : "Forgot password from Blinkit Clone",
+            html: forgotPasswordTemplate({
+                name : user.name,
+                otp : otp
+            })
         })
 
 
@@ -352,5 +357,36 @@ export async function forgotPasswordController(request,response){
             error : true,
             success : false
         })
+    }
+}
+
+//verify forgot password otp 
+
+export async function verifyForgotPasswordOtp(request,response){
+    try {
+        const {email , otp } = request.body
+
+        if(!email || !otp){
+            return response.status(400).json({
+                message : "Provide Required Field Email and Otp",
+                error : true,
+                success : false
+        })}
+
+        const user = await UserModel.findOne({ email })
+        if(!user){
+            return response.status(404).json({
+                message : "Email not Available",
+                error : true,
+                success : false
+        })}
+    } catch (error) {
+
+        return response.status(500).json({
+            message : error.message || error,
+            error : true,
+            success : false
+        })
+        
     }
 }
