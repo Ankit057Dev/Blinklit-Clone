@@ -6,6 +6,7 @@ import generatedRefreshToken from '../utils/generatedRefreshToken.js'
 import sendEmail from '../config/sendEmail.js'
 import jwt from 'jsonwebtoken'
 import uploadImageCloudinary from '../utils/uploadImageCloudinary.js'
+import generateOtp from '../utils/generateOtp.js'
 
 export async function registerUserController(request,response){
     try {
@@ -278,7 +279,7 @@ export async function loginController(request,response){
                 hashPassword = await bcryptjs.hash(password,salt)
             }
 
-            const updateUser = await UserModel.findByIdAndUpdate(userId,{
+            const updateUser = await UserModel.updateOne({_id :userId},{
                 ...(name && {name : name}),
                 ...(email && {email : email}),
                 ...(mobile && {mobile: mobile}),
@@ -303,3 +304,53 @@ export async function loginController(request,response){
             
         }
     }
+
+//forgot password
+
+export async function forgotPasswordController(request,response){
+    try {
+        const {email} = request.body
+
+        const user = await UserModel.findOne({email})
+
+        if(!user){
+            return response.status(400).json({
+                message : "Email not registered!...Enter correct one",
+                error : true,
+                success : false
+        })}
+
+        const otp = generateOtp()
+        const expireTime = new Date() + 60 * 60 * 1000  //1hr
+
+        const update = await UserModel.findByIdAndUpdate(user._id,{
+            forgot_password_otp : otp,
+            forgot_password_expiry : new Date(expireTime).toISOString()// in indian time frame
+
+        })
+
+        // to send email
+
+        await sendEmail({
+            sendTo : email,
+            subject : "Forgot password from Blinkit Clone",
+        })
+
+
+        return response.json({
+            message : "check your email",
+            error : false,
+            success : true
+        })
+
+
+
+
+    } catch (error) {
+        return response.status(500).json({
+            message : error.message || error,
+            error : true,
+            success : false
+        })
+    }
+}
