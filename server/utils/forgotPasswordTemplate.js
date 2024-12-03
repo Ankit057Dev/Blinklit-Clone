@@ -4,9 +4,9 @@ return `
     <p>Dear, ${name}</p>
     <p>Here is your OTP for password reset: </p></br>
 
-    <p> this otp is valud for 1 hpur only. Enter this otp in the blinkit website to proceed with resetting your password.</p></br>
+    <p> this otp is valid for 1 hour only. Enter this otp in the blinkit website to proceed with resetting your password.</p></br>
 
-    <div>
+    <div style = "background:yellow;font-size:20px">
     <p>Requested Otp is :  ${otp}</p>
     </div></br>
 
