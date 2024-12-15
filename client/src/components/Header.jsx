@@ -1,13 +1,14 @@
 import React from 'react'
 import logo from '../assets/logo.png'
 import Search from './Search'
+import { Link } from 'react-router-dom'
 const Header = () => {
   return (
   <header className='h-20 shadow-md sticky top-0'>
  <div className=' container mx-auto flex items-center h-full justify-between'>
       {/**logo*/}
       <div className='h-full'>
-              <div className='h-full flex items-center px-2 '>
+              <Link to={"/"} className='h-full flex items-center px-2 '>
                     <img 
                       src={logo}
                       width={170}
@@ -22,7 +23,7 @@ const Header = () => {
                       alt='logo'
                       className='lg:hidden'
                       />
-              </div>
+              </Link>
       </div>
 
       {/**search */}
