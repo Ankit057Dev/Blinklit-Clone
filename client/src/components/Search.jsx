@@ -13,20 +13,21 @@ const Search = () => {
     const isSearch = location.pathname === "/search"
     setIsSearchPage(isSearch)
   },[location])
-  const isSearchPage = location.pathname === "/search"
   const redirectToSearchPage = ()=>{
           navigate("/search")
   }
+
+
   return (
     <div className=' w-full min-w-[300px] lg:min-w-[420px] h-12 rounded-lg border overflow-hidden flex items-center  text-neutral-500'>
             <button className=' flex justify-center items-center h-full p-3 text-neutral-600'>
             <IoSearchOutline size ={22} />
             </button>
-            <div>
-
-            </div>
-
-                        <div onClick={redirectToSearchPage}>
+            <div className='w-full'>
+            {
+            !isSearchPage ? (
+                //not in search page
+                <div onClick={redirectToSearchPage}>
                         <TypeAnimation
                         sequence={[
                             // Same substring at the start will only be typed out once, initially
@@ -56,6 +57,20 @@ const Search = () => {
                         repeat={Infinity}
                 />
                         </div>
+              ) :(
+                //when i will be  in  search page
+                <div className='w-full h-full'>
+                  <input
+                    type = 'text'
+                    placeholder='Search for items to order.'
+                    autoFocus
+                    className = 'bg-transparent w-full h-full outline-none '
+                  />
+                </div>
+              )
+            }
+
+            </div>
     </div>
   )
 }
