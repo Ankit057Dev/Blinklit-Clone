@@ -15,6 +15,7 @@ async function connectDB(){
         console.log("connected DB")
 
     }catch (error){
+        console.log('not')
         console.log("Mongodb connection error",error)
         process.exit(1)
     }
