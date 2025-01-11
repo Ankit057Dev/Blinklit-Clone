@@ -5,7 +5,7 @@ import generatedAccessToken from '../utils/generatedAccessToken.js'
 import generatedRefreshToken from '../utils/generatedRefreshToken.js'
 import sendEmail from '../config/sendEmail.js'
 import jwt from 'jsonwebtoken'
-import uploadImageCloudinary from '../utils/uploadImageCloudinary.js'
+import uploadImageCloudinary from '../utils/uploadImageClodinary.js'
 import generateOtp from '../utils/generateOtp.js'
 import forgotPasswordTemplate from '../utils/forgotPasswordTemplate.js'
 

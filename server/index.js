@@ -7,10 +7,18 @@ import morgan from 'morgan' // it is logger when an api is called displayed insi
 import helmet from 'helmet'
 import connectDB from './config/connectDB.js'
 import userRouter from './route/user.route.js'
+import categoryRouter from './route/category.route.js'
+import uploadRouter from './route/upload.router.js'
+import subCategoryRouter from './route/subCategory.route.js'
+import productRouter from './route/product.route.js'
+import cartRouter from './route/cart.route.js'
+import addressRouter from './route/address.route.js'
+import orderRouter from './route/order.route.js'
 const app = express()
 app.use(cors({
     credentials : true,
-    origin: process.env.FRONTEND_URL // for accessing cookies in client side
+    origin: process.env.FRONTEND_URL, // for accessing cookies in client side
+    // methods: ['GET', 'POST', 'PUT', 'DELETE']
 }))
 
 //for coverrsion of response to json
@@ -39,6 +47,13 @@ app.get("/",(request,response)=>{
 
 
 app.use('/api/user',userRouter)
+app.use("/api/category",categoryRouter)
+app.use("/api/file",uploadRouter)
+app.use("/api/subcategory",subCategoryRouter)
+app.use("/api/product",productRouter)
+app.use("/api/cart",cartRouter)
+app.use("/api/address",addressRouter)
+app.use('/api/order',orderRouter)
 
 
 connectDB().then(()=>{
