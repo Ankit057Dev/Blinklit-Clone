@@ -1,7 +1,7 @@
 {
   "name": "server",
   "version": "1.0.0",
-  "description": "Blinkit clone(By Ankit)",
+  "description": "",
   "main": "index.js",
   "type": "module",
   "scripts": {

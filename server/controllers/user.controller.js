@@ -5,9 +5,9 @@ import generatedAccessToken from '../utils/generatedAccessToken.js'
 import generatedRefreshToken from '../utils/generatedRefreshToken.js'
 import sendEmail from '../config/sendEmail.js'
 import jwt from 'jsonwebtoken'
-import uploadImageCloudinary from '../utils/uploadImageClodinary.js'
 import generateOtp from '../utils/generateOtp.js'
 import forgotPasswordTemplate from '../utils/forgotPasswordTemplate.js'
+import uploadImageClodinary from '../utils/uploadImageClodinary.js'
 
 export async function registerUserController(request,response){
     try {
@@ -240,7 +240,7 @@ export async function loginController(request,response){
             const userId = request.userId // auth middleware
             const image = request.file // multer middleware
 
-            const upload = await uploadImageCloudinary(image)// to upload image at cloudinary
+            const upload = await uploadImageClodinary(image)// to upload image at cloudinary
 
             const updateUser = await UserModel.findByIdAndUpdate(userId,{
                 avatar : upload.url
@@ -257,7 +257,7 @@ export async function loginController(request,response){
             })
 
         } catch (error) {
-            return respone.status(500).json({
+            return response.status(500).json({
                 message :error.message || error,
                 error : true,
                 success: false

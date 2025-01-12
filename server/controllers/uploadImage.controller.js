@@ -18,7 +18,7 @@ const uploadImageController = async(request,response)=>{
             error : true,
             success : false
         })
-    }
+    } 
 }
 
 export default uploadImageController
